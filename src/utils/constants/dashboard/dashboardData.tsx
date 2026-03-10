@@ -8,6 +8,7 @@ import { D2I18n } from 'dhis2-semis-types';
 
 const studentCards = (i18n: D2I18n) => [
     { key: "registration", label: i18n.t("Enrollment"), icon: enrollmentImage, path: "enrollments", configurable: true },
+    { key: "admission", label: i18n.t("Admission"), icon: enrollmentImage, path: "admissions", configurable: false },
     { key: "attendance", label: i18n.t("Attendance"), icon: attendanceImage, path: "attendance", configurable: true },
     { key: "performance", label: i18n.t("Performance"), icon: performanceImage, path: "performance", configurable: true },
     { key: "transfer", label: i18n.t("Transfer"), icon: transferImage, path: "transfer", configurable: true },

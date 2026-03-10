@@ -1,6 +1,8 @@
 const isModuleConfigured = (section: string, dataStore: any[], key: string): boolean => {
   // Check if the section exists in the dataStore and if the module is configured
   if (!dataStore || !Array.isArray(dataStore)) return false;
+  // Admission shares registration's configuration
+  if (key === "admission") return isModuleConfigured(section, dataStore, "registration");
   const sectionData = dataStore?.find((item: any) => item?.key === section?.toLowerCase());
   return sectionData?.[key]?.programStage || sectionData?.[key]?.programStages?.some((x: any) => x.programStage);
 }
