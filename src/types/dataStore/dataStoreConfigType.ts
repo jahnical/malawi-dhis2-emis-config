@@ -18,6 +18,7 @@ type attendance = FieldGroup & { attendanceStatus: FieldGroup };
 type DataStoreConfigType = {
     key: string;
     lastUpdate: string;
+    admission?: FieldGroup;
     attendance?: attendance;
     "final-result"?: FieldGroup;
     performance?: FieldGroup;

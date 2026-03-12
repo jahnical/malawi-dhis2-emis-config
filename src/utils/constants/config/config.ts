@@ -2,6 +2,18 @@ import { D2I18n } from "dhis2-semis-types";
 
 export const config = (i18n: D2I18n) => [
     {
+        admission: {
+            admissionDate: {
+                filter: 'valueType:eq:DATE',
+                hint: i18n.t('Attribute of type date'),
+                resource: 'attributes',
+                inputType: 'LIST',
+                label: i18n.t('Admission date'),
+                order: 1,
+                required: true,
+                valueType: 'DATE'
+            }
+        },
         attendance: {
             absenceReason: {
                 filter: 'valueType:eq:TEXT',

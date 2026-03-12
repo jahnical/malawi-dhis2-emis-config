@@ -274,6 +274,24 @@ const performancePostBody = (formValues: any) => {
     }
 }
 
+const admissionBodyToForm = (dataStoreValues: any, module: string) => {
+    return {
+        module: module,
+        program: dataStoreValues?.program,
+        ...dataStoreValues?.[module]
+    }
+}
+
+const admissionPostBody = (formValues: any) => {
+    return {
+        [formValues?.module]: {
+            enabled: formValues?.enabled ?? true,
+            admissionDate: formValues?.admissionDate,
+            lastUpdate: new Date().toISOString()
+        }
+    }
+}
+
 const modulePostBody = (formValues: any, program: any, prevData: DataStoreConfigType[], config: any): any => {
     const prevDataStore = prevData
     const selectedDataStoreKey = prevData?.find((x: any) => x.program == program.id)
@@ -305,6 +323,9 @@ const modulePostBody = (formValues: any, program: any, prevData: DataStoreConfig
         case 'performance':
             return returnBody(performancePostBody(formValues))
 
+        case 'admission':
+            return returnBody(admissionPostBody(formValues))
+
         default:
             return {}
     }
@@ -326,6 +347,9 @@ const moduleBodyToForm = (dataStoreValues: any, module: string) => {
 
         case 'performance':
             return performanceBodyToForm(dataStoreValues, module)
+
+        case 'admission':
+            return admissionBodyToForm(dataStoreValues, module)
 
         default:
             return {}

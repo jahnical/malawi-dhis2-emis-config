@@ -18,6 +18,8 @@ import { useBuildStudentAttendanceForm } from '../student/attendance/useBuildStu
 import { formStudentAttendance } from '../../../utils/form/student/attendance/useBuildStudentAttendanceForm'
 import { useBuildStudentPerformanceForm } from '../student/performance/useBuildStudentPerformanceForm'
 import { formmStudentPerformance } from '../../../utils/form/student/performance/useBuildStudentAttendanceForm'
+import { useBuildStudentAdmissionForm } from '../student/admission/useBuildStudentAdmissionForm'
+import { formatStudentAdmissionForm } from '../../../utils/form/student/admission/formatStudentAdmissionForm'
 import { D2I18n } from 'dhis2-semis-types'
 import { useBuildAttendanceClassConfigForm } from '../student/attendance/useBuildAttendanceClassConfigForm'
 import { ProgramDataState } from '../../../atoms/ProgramDataSchema'
@@ -41,6 +43,7 @@ const useBuildForm = ({ trackeValues, i18n }: { trackeValues?: any, i18n: D2I18n
     const { getProgram } = useProgramConfig()
     const { buildStudentTransferForm } = useBuildStudentTransferForm()
     const { buildStudentPerformanceForm } = useBuildStudentPerformanceForm()
+    const { buildStudentAdmissionForm } = useBuildStudentAdmissionForm()
     const setMainProgram = useSetRecoilState<any>(ProgramDataState)
 
 
@@ -247,6 +250,22 @@ const useBuildForm = ({ trackeValues, i18n }: { trackeValues?: any, i18n: D2I18n
 
                 const performanceForm = formmStudentPerformance({ performanceFields, programFields, i18n })
                 return performanceForm
+
+            case 'admission':
+                const admissionFields = data
+                    ? buildStudentAdmissionForm({
+                        dataStoreConfig: dataStoreConfig,
+                        programTrackedEntityAttributes: data?.programTrackedEntityAttributes ?? []
+                    })
+                    : []
+
+                const admissionForm = formatStudentAdmissionForm({
+                    admissionFields,
+                    programFields,
+                    i18n
+                })
+                return admissionForm
+
             default:
                 break
         }
