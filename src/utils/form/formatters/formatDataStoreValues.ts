@@ -287,6 +287,7 @@ const admissionPostBody = (formValues: any) => {
         [formValues?.module]: {
             enabled: formValues?.enabled ?? true,
             admissionDate: formValues?.admissionDate,
+            studentIdentifier: formValues?.studentIdentifier,
             lastUpdate: new Date().toISOString()
         }
     }

@@ -12,6 +12,15 @@ export const config = (i18n: D2I18n) => [
                 order: 1,
                 required: true,
                 valueType: 'DATE'
+            },
+            studentIdentifier: {
+                filter: '',
+                hint: i18n.t('Attribute used as student identifier. If left empty by the user during admission, the system will auto-generate a value using the attribute pattern.'),
+                resource: 'attributes',
+                inputType: 'LIST',
+                label: i18n.t('Student Identifier'),
+                order: 2,
+                required: false
             }
         },
         attendance: {
