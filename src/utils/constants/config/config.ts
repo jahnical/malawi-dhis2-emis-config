@@ -21,6 +21,13 @@ export const config = (i18n: D2I18n) => [
                 label: i18n.t('Student Identifier'),
                 order: 2,
                 required: false
+            },
+            replaceIdentifierYearPrefix: {
+                inputType: 'BOOLEAN',
+                label: i18n.t('Replace identifier year prefix'),
+                hint: i18n.t('When enabled, the first 4 digits of a generated student identifier will be replaced with the upper year of the academic calendar that the admission date falls in.'),
+                order: 3,
+                required: false
             }
         },
         attendance: {
