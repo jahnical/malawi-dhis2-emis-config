@@ -23,6 +23,7 @@ function ModalManager(props: ModalManagerInterface) {
     const programData = useRecoilValue<any>(ProgramDataState)
     const name = useQuery.get("name");
     const section = useQuery.get("section");
+    const module = useQuery.get("module");
     const [loadCreateConfig, setLoading] = useState<boolean>(false)
     const { refetch } = useGetDataStore(true)
     const { createDataStore } = usePostDataStore()
@@ -34,7 +35,7 @@ function ModalManager(props: ModalManagerInterface) {
     const calendar = useRecoilValue(SchoolCalendarState)
     const { show } = useShowAlerts()
 
-    const isPerformance = section === 'performance'
+    const isPerformance = module === 'performance'
     const [subjects, setSubjects] = useState<PerformanceSubjectMapping[]>(initialValues?.subjects ?? [])
     const [gradeRanges, setGradeRanges] = useState<GradeRange[]>(initialValues?.gradeRanges ?? [])
 
