@@ -23,6 +23,7 @@ import { formatStudentAdmissionForm } from '../../../utils/form/student/admissio
 import { D2I18n } from 'dhis2-semis-types'
 import { useBuildAttendanceClassConfigForm } from '../student/attendance/useBuildAttendanceClassConfigForm'
 import { ProgramDataState } from '../../../atoms/ProgramDataSchema'
+import { useGetOptionSets } from '../../optionSets/useGetOptionSets'
 
 const useBuildForm = ({ trackeValues, i18n }: { trackeValues?: any, i18n: D2I18n }) => {
     const { useQuery } = useUrlParams()
@@ -71,6 +72,7 @@ const useBuildForm = ({ trackeValues, i18n }: { trackeValues?: any, i18n: D2I18n
     }, [trackeValues?.programAttendanceClassConfig])
 
     const { programs, loading: loadingPrograms } = useGetPrograms()
+    const { optionSets } = useGetOptionSets()
 
     const buildForm = () => {
         const programFields = buildStudentProgramForm({ dataStoreConfig: dataStoreConfig, programs, loading })
@@ -242,7 +244,8 @@ const useBuildForm = ({ trackeValues, i18n }: { trackeValues?: any, i18n: D2I18n
                     ? buildStudentPerformanceForm(
                         {
                             dataStoreConfig: dataStoreConfig,
-                            programStages: data?.programStages ?? []
+                            programStages: data?.programStages ?? [],
+                            optionSets
                         },
                         getDataElements(data?.programStages, trackeValues?.programStagePerformance)
                     )

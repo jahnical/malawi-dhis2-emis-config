@@ -258,7 +258,10 @@ const performanceBodyToForm = (dataStoreValues: any, module: string) => {
     return {
         module: module,
         program: dataStoreValues?.program,
-        programStages: dataStoreValues?.[module]?.programStages?.map((x: any) => x.programStage)
+        programStages: dataStoreValues?.[module]?.programStages?.map((x: any) => x.programStage),
+        gradeOptionSet: dataStoreValues?.[module]?.gradeMapping?.gradeOptionSet ?? null,
+        subjects: dataStoreValues?.[module]?.subjects ?? [],
+        gradeRanges: dataStoreValues?.[module]?.gradeMapping?.ranges ?? []
     }
 }
 
@@ -267,9 +270,12 @@ const performancePostBody = (formValues: any) => {
         [formValues?.module]: {
             enabled: true,
             lastUpdate: new Date().toISOString(),
-            programStages: formValues?.programStages?.map((e: string) => {
-                return { programStage: e }
-            })
+            programStages: formValues?.programStages?.map((e: string) => ({ programStage: e })),
+            subjects: formValues?.subjects ?? [],
+            gradeMapping: {
+                gradeOptionSet: formValues?.gradeOptionSet ?? null,
+                ranges: formValues?.gradeRanges ?? []
+            }
         }
     }
 }
