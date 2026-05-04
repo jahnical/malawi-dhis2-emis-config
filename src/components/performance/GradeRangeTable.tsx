@@ -70,57 +70,65 @@ function GradeRangeTable({ gradeOptionSetId, value, onChange }: GradeRangeTableP
                                 </TableCell>
                             </TableRow>
                         )}
-                        {value.map((row, index) => (
-                            <TableRow key={index}>
-                                <TableCell>
-                                    <FormControl fullWidth size="small">
-                                        <Select
-                                            value={row.optionCode}
-                                            onChange={e => updateRow(index, 'optionCode', e.target.value)}
-                                            displayEmpty
-                                            disabled={loading}
+                        {value.map((row, index) => {
+                            const usedCodes = value
+                                .filter((_, i) => i !== index)
+                                .map(r => r.optionCode)
+                                .filter(Boolean)
+                            const availableOptions = options.filter(opt => !usedCodes.includes(opt.code))
+
+                            return (
+                                <TableRow key={index}>
+                                    <TableCell>
+                                        <FormControl fullWidth size="small">
+                                            <Select
+                                                value={row.optionCode}
+                                                onChange={e => updateRow(index, 'optionCode', e.target.value)}
+                                                displayEmpty
+                                                disabled={loading}
+                                            >
+                                                <MenuItem value=""><em>— Select grade —</em></MenuItem>
+                                                {availableOptions.map(opt => (
+                                                    <MenuItem key={opt.id} value={opt.code}>
+                                                        {opt.displayName} ({opt.code})
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                        {loading && <CircularProgress size={14} sx={{ ml: 1 }} />}
+                                    </TableCell>
+                                    <TableCell>
+                                        <TextField
+                                            type="number"
+                                            size="small"
+                                            value={row.minScore}
+                                            onChange={e => updateRow(index, 'minScore', parseFloat(e.target.value) || 0)}
+                                            inputProps={{ step: 0.5, min: 0 }}
+                                            sx={{ width: 100 }}
+                                        />
+                                    </TableCell>
+                                    <TableCell>
+                                        <TextField
+                                            type="number"
+                                            size="small"
+                                            value={row.maxScore}
+                                            onChange={e => updateRow(index, 'maxScore', parseFloat(e.target.value) || 0)}
+                                            inputProps={{ step: 0.5, min: 0 }}
+                                            sx={{ width: 100 }}
+                                        />
+                                    </TableCell>
+                                    <TableCell>
+                                        <Button
+                                            size="small"
+                                            color="error"
+                                            onClick={() => removeRow(index)}
                                         >
-                                            <MenuItem value=""><em>— Select grade —</em></MenuItem>
-                                            {options.map(opt => (
-                                                <MenuItem key={opt.id} value={opt.code}>
-                                                    {opt.displayName} ({opt.code})
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                    {loading && <CircularProgress size={14} sx={{ ml: 1 }} />}
-                                </TableCell>
-                                <TableCell>
-                                    <TextField
-                                        type="number"
-                                        size="small"
-                                        value={row.minScore}
-                                        onChange={e => updateRow(index, 'minScore', parseFloat(e.target.value) || 0)}
-                                        inputProps={{ step: 0.5, min: 0 }}
-                                        sx={{ width: 100 }}
-                                    />
-                                </TableCell>
-                                <TableCell>
-                                    <TextField
-                                        type="number"
-                                        size="small"
-                                        value={row.maxScore}
-                                        onChange={e => updateRow(index, 'maxScore', parseFloat(e.target.value) || 0)}
-                                        inputProps={{ step: 0.5, min: 0 }}
-                                        sx={{ width: 100 }}
-                                    />
-                                </TableCell>
-                                <TableCell>
-                                    <Button
-                                        size="small"
-                                        color="error"
-                                        onClick={() => removeRow(index)}
-                                    >
-                                        Remove
-                                    </Button>
-                                </TableCell>
-                            </TableRow>
-                        ))}
+                                            Remove
+                                        </Button>
+                                    </TableCell>
+                                </TableRow>
+                            )
+                        })}
                     </TableBody>
                 </Table>
             </Paper>
