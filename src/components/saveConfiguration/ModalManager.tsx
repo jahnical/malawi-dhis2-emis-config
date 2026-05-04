@@ -1,6 +1,6 @@
 import ModalContent from "./ModalContent";
 import { useBuildForm } from "../../hooks/form";
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { DataStoreState, ModalComponent, } from "dhis2-semis-components";
 import { ModalManagerInterface } from "../../types/modal/ModalProps";
 import { useUrlParams, capitalizeString } from "dhis2-semis-functions";
@@ -10,9 +10,11 @@ import { ProgramDataState } from "../../atoms/ProgramDataSchema";
 import useGetDataStore from "../../hooks/dataStore/useGetDataStore";
 import { modulePostBody } from "../../utils/form/formatters/formatDataStoreValues";
 import { DataStoreConfigState } from "../../atoms/DataStoreSchema";
-import { DataStoreConfigType } from "../../types/dataStore/dataStoreConfigType";
+import { DataStoreConfigType, PerformanceSubjectMapping, GradeRange } from "../../types/dataStore/dataStoreConfigType";
 import { SchoolCalendarState } from "../../atoms/schoolCalendar";
 import useShowAlerts from "../../hooks/alert/useShowAlert";
+import SubjectMappingTable from "../performance/SubjectMappingTable";
+import GradeRangeTable from "../performance/GradeRangeTable";
 
 function ModalManager(props: ModalManagerInterface) {
     const { open, setOpen, initialValues, i18n } = props;
@@ -32,6 +34,24 @@ function ModalManager(props: ModalManagerInterface) {
     const calendar = useRecoilValue(SchoolCalendarState)
     const { show } = useShowAlerts()
 
+    const isPerformance = section === 'performance'
+    const [subjects, setSubjects] = useState<PerformanceSubjectMapping[]>(initialValues?.subjects ?? [])
+    const [gradeRanges, setGradeRanges] = useState<GradeRange[]>(initialValues?.gradeRanges ?? [])
+
+    const allDataElements = useMemo(() => {
+        if (!programData?.programStages || !trackeValues?.programStages) return []
+        const selectedStageIds: string[] = Array.isArray(trackeValues.programStages)
+            ? trackeValues.programStages
+            : [trackeValues.programStages]
+        return programData.programStages
+            .filter((s: any) => selectedStageIds.includes(s.id))
+            .flatMap((s: any) => s.programStageDataElements?.map((p: any) => ({
+                id: p.dataElement.id,
+                displayName: p.dataElement.displayName,
+                optionSetValue: p.dataElement.optionSetValue ?? false
+            })) ?? [])
+    }, [programData, trackeValues?.programStages])
+
     const handleCloseModal = () => {
         remove("name")
         remove("module")
@@ -46,13 +66,14 @@ function ModalManager(props: ModalManagerInterface) {
 
         try {
             setLoading(true)
+            const enriched = isPerformance ? { ...e, subjects, gradeRanges } : e
             const configKey = config?.find(x => x.key == section)
-            let postData = modulePostBody(e, programData, prevDataStore as unknown as DataStoreConfigType[], configKey)
+            let postData = modulePostBody(enriched, programData, prevDataStore as unknown as DataStoreConfigType[], configKey)
             const keyIndex = postData?.findIndex((x: any) => x.key == section)
-            const { academicYear, ...rest } = postData?.[keyIndex]?.[e?.module]
+            const { academicYear, ...rest } = postData?.[keyIndex]?.[enriched?.module]
 
             if (keyIndex > -1) {
-                postData[keyIndex] = { ...postData[keyIndex], [e?.module]: rest }
+                postData[keyIndex] = { ...postData[keyIndex], [enriched?.module]: rest }
             }
 
             createDataStore({
@@ -95,6 +116,22 @@ function ModalManager(props: ModalManagerInterface) {
     const formatedName = capitalizeString(name!)
     const formatedSection = capitalizeString(section!)
 
+    const extraContent = isPerformance ? (
+        <>
+            <SubjectMappingTable
+                allDataElements={allDataElements}
+                gradeOptionSetId={trackeValues?.gradeOptionSet ?? null}
+                value={subjects}
+                onChange={setSubjects}
+            />
+            <GradeRangeTable
+                gradeOptionSetId={trackeValues?.gradeOptionSet ?? null}
+                value={gradeRanges}
+                onChange={setGradeRanges}
+            />
+        </>
+    ) : undefined
+
     return (
         <ModalComponent
             open={open}
@@ -115,6 +152,7 @@ function ModalManager(props: ModalManagerInterface) {
                 formFields={formVariables!}
                 onCancel={handleCloseModal}
                 initialValues={allInitialValues}
+                extraContent={extraContent}
             />
         </ModalComponent>
     );

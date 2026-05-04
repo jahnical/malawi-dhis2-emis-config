@@ -7,7 +7,7 @@ import { useRecoilValue } from 'recoil';
 import { ProgramLoaderState } from '../../atoms/getProgramLoaderSchema';
 
 function ModalContent(props: ModalContentInterface) {
-    const { formFields, onSubmit, onCancel, initialValues, loading, setTrackedValues } = props;
+    const { formFields, onSubmit, onCancel, initialValues, loading, setTrackedValues, extraContent } = props;
     const loadingProgram = useRecoilValue<boolean>(ProgramLoaderState)
 
     return (
@@ -26,6 +26,7 @@ function ModalContent(props: ModalContentInterface) {
                         trackedEntity={initialValues?.trackedEntity}
                         onFormSubtmit={(e: Record<string, any>) => { onSubmit(e) }}
                     />
+                    {extraContent}
                 </WithPadding>
             </WithBorder>
         </WithPadding>
