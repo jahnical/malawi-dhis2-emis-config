@@ -64,53 +64,54 @@ function SubjectMappingTable({ allDataElements, gradeOptionSetId, value, onChang
                                 </TableCell>
                             </TableRow>
                         )}
-                        {value.map((row, index) => (
-                            <TableRow key={index}>
-                                <TableCell>
-                                    <FormControl fullWidth size="small">
-                                        <Select
+                        {value.map((row, index)=> {
+
+                            const usedScoreDEs = value.filter((_, i) => i !== index).map(r => r.scoreDataElement).filter(Boolean)
+                            const usedGradeDEs = value.filter((_, i) => i !== index).map(r => r.gradeDataElement).filter(Boolean)
+
+                            const availableScoreDEs = scoreDEs.filter(de => !usedScoreDEs.includes(de.id))
+                            const availableGradeDEs = gradeDEs.filter(de => !usedGradeDEs.includes(de.id))
+                            const availableDes = allDataElements.filter(de => !usedScoreDEs.includes(de.id) && !usedGradeDEs.includes(de.id))
+
+                            return (
+                              <TableRow key={index}>
+                                  <TableCell>
+                                      <FormControl fullWidth size="small">
+                                          <Select
                                             value={row.scoreDataElement}
                                             onChange={e => updateRow(index, 'scoreDataElement', e.target.value)}
                                             displayEmpty
-                                        >
-                                            <MenuItem value=""><em>— Select score DE —</em></MenuItem>
-                                            {scoreDEs.map(de => (
+                                          >
+                                              <MenuItem value=""><em>— Select score DE —</em></MenuItem>
+                                              {availableDes.map(de => (
                                                 <MenuItem key={de.id} value={de.id}>{de.displayName}</MenuItem>
-                                            ))}
-                                            {scoreDEs.length === 0 && allDataElements.length > 0 && allDataElements.map(de => (
-                                                <MenuItem key={de.id} value={de.id}>{de.displayName}</MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                </TableCell>
-                                <TableCell>
-                                    <FormControl fullWidth size="small">
-                                        <Select
+                                              ))}
+                                          </Select>
+                                      </FormControl>
+                                  </TableCell>
+                                  <TableCell>
+                                      <FormControl fullWidth size="small">
+                                          <Select
                                             value={row.gradeDataElement}
                                             onChange={e => updateRow(index, 'gradeDataElement', e.target.value)}
                                             displayEmpty
-                                        >
-                                            <MenuItem value=""><em>— Select grade DE —</em></MenuItem>
-                                            {gradeDEs.map(de => (
+                                          >
+                                              <MenuItem value=""><em>— Select grade DE —</em></MenuItem>
+                                              {availableDes.map(de => (
                                                 <MenuItem key={de.id} value={de.id}>{de.displayName}</MenuItem>
-                                            ))}
-                                            {gradeDEs.length === 0 && allDataElements.length > 0 && allDataElements.map(de => (
-                                                <MenuItem key={de.id} value={de.id}>{de.displayName}</MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                </TableCell>
-                                <TableCell>
-                                    <Button
-                                        size="small"
-                                        color="error"
-                                        onClick={() => removeRow(index)}
-                                    >
-                                        Remove
-                                    </Button>
-                                </TableCell>
-                            </TableRow>
-                        ))}
+                                              ))}
+                                          </Select>
+                                      </FormControl>
+                                  </TableCell>
+                                  <TableCell>
+                                      <Button size="small" color="error" onClick={() => removeRow(index)}>
+                                          Remove
+                                      </Button>
+                                  </TableCell>
+                              </TableRow>
+                              )
+                          }
+                        )}
                     </TableBody>
                 </Table>
             </Paper>
