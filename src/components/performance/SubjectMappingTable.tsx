@@ -5,7 +5,7 @@ import {
 } from '@mui/material'
 import { PerformanceSubjectMapping } from '../../types/dataStore/dataStoreConfigType'
 
-interface DataElementOption {
+export interface DataElementOption {
     id: string
     displayName: string
     optionSetValue?: boolean

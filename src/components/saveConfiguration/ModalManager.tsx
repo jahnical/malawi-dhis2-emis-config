@@ -13,7 +13,7 @@ import { DataStoreConfigState } from "../../atoms/DataStoreSchema";
 import { DataStoreConfigType, PerformanceSubjectMapping, GradeRange } from "../../types/dataStore/dataStoreConfigType";
 import { SchoolCalendarState } from "../../atoms/schoolCalendar";
 import useShowAlerts from "../../hooks/alert/useShowAlert";
-import SubjectMappingTable from "../performance/SubjectMappingTable";
+import SubjectMappingTable, { DataElementOption } from "../performance/SubjectMappingTable";
 import GradeRangeTable from "../performance/GradeRangeTable";
 
 function ModalManager(props: ModalManagerInterface) {
@@ -44,13 +44,18 @@ function ModalManager(props: ModalManagerInterface) {
         const selectedStageIds: string[] = Array.isArray(trackeValues.programStages)
             ? trackeValues.programStages
             : [trackeValues.programStages]
-        return programData.programStages
+
+        const elements = programData.programStages
             .filter((s: any) => selectedStageIds.includes(s.id))
             .flatMap((s: any) => s.programStageDataElements?.map((p: any) => ({
                 id: p.dataElement.id,
                 displayName: p.dataElement.displayName,
                 optionSetValue: p.dataElement.optionSetValue ?? false
             })) ?? [])
+
+        return Array.from(
+          new Map<string, DataElementOption>(elements.map((el: any) => [el.id, el])).values()
+        )
     }, [programData, trackeValues?.programStages])
 
     const handleCloseModal = () => {
