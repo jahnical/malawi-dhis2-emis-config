@@ -69,9 +69,53 @@ function SubjectMappingTable({ allDataElements, gradeOptionSetId, value, onChang
                             const usedScoreDEs = value.filter((_, i) => i !== index).map(r => r.scoreDataElement).filter(Boolean)
                             const usedGradeDEs = value.filter((_, i) => i !== index).map(r => r.gradeDataElement).filter(Boolean)
 
-                            const availableScoreDEs = scoreDEs.filter(de => !usedScoreDEs.includes(de.id))
-                            const availableGradeDEs = gradeDEs.filter(de => !usedGradeDEs.includes(de.id))
-                            const availableDes = allDataElements.filter(de => !usedScoreDEs.includes(de.id) && !usedGradeDEs.includes(de.id))
+                            const availableScoreDEs = allDataElements
+                              .filter(de =>
+                                !usedScoreDEs.includes(de.id) &&
+                                !usedGradeDEs.includes(de.id) &&
+                                de.id !== row.gradeDataElement
+                              )
+                            const availableGradeDEs = allDataElements
+                              .filter(de =>
+                                !usedScoreDEs.includes(de.id) &&
+                                !usedGradeDEs.includes(de.id)
+                                && de.id !== row.scoreDataElement
+                              )
+                            /**
+                             * TODO(): Use the code below when the score de.optionset is working and test.
+                             * const availableScoreDEs = scoreDEs.filter(de =>
+                             *       !usedScoreDEs.includes(de.id) && de.id !== row.gradeDataElement
+                             *   )
+                             *   const availableGradeDEs = gradeDEs.filter(de =>
+                             *       !usedGradeDEs.includes(de.id) && de.id !== row.scoreDataElement
+                             *   )
+                             *
+                             *   And split the fallback into two so each column also excludes the opposite:
+                             *   const fallbackForScore = allDataElements.filter(de =>
+                             *       !usedScoreDEs.includes(de.id) && !usedGradeDEs.includes(de.id) && de.id !== row.gradeDataElement
+                             *   )
+                             *   const fallbackForGrade = allDataElements.filter(de =>
+                             *       !usedScoreDEs.includes(de.id) && !usedGradeDEs.includes(de.id) && de.id !== row.scoreDataElement
+                             *   )
+                             *
+                             *   // on the usage inside the score and grade des you should have something like
+                             *   <Select
+                             *      value={row.scoreDataElement}
+                             *      onChange={e => updateRow(index, 'scoreDataElement', e.target.value)}
+                             *      displayEmpty
+                             *    >
+                             *        <MenuItem value=""><em>— Select score DE —</em></MenuItem>
+                             *        {availableScoreDEs.map(de => (
+                             *          <MenuItem key={de.id} value={de.id}>{de.displayName}</MenuItem>
+                             *        ))}
+                             *        {availableScoreDEs.length === 0 && fallbackForScore.map(de => (
+                             *          <MenuItem key={de.id} value={de.id}>{de.displayName}</MenuItem>
+                             *        ))}
+                             *
+                             *    </Select>
+                             *
+                             *    same thing applies for the grade select.
+                             * */
 
                             return (
                               <TableRow key={index}>
@@ -83,7 +127,7 @@ function SubjectMappingTable({ allDataElements, gradeOptionSetId, value, onChang
                                             displayEmpty
                                           >
                                               <MenuItem value=""><em>— Select score DE —</em></MenuItem>
-                                              {availableDes.map(de => (
+                                              {availableScoreDEs.map(de => (
                                                 <MenuItem key={de.id} value={de.id}>{de.displayName}</MenuItem>
                                               ))}
                                           </Select>
@@ -97,7 +141,7 @@ function SubjectMappingTable({ allDataElements, gradeOptionSetId, value, onChang
                                             displayEmpty
                                           >
                                               <MenuItem value=""><em>— Select grade DE —</em></MenuItem>
-                                              {availableDes.map(de => (
+                                              {availableGradeDEs.map(de => (
                                                 <MenuItem key={de.id} value={de.id}>{de.displayName}</MenuItem>
                                               ))}
                                           </Select>
