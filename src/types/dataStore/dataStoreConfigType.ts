@@ -15,13 +15,34 @@ type FieldGroup = Record<string, ConfigField | ProgramStageField>;
 
 type attendance = FieldGroup & { attendanceStatus: FieldGroup };
 
+type PerformanceSubjectMapping = {
+    scoreDataElement: string;
+    gradeDataElement: string;
+};
+
+type GradeRange = {
+    optionCode: string;
+    minScore: number;
+    maxScore: number;
+};
+
+type PerformanceGradeMapping = {
+    gradeOptionSet: string;
+    ranges: GradeRange[];
+};
+
+type PerformanceConfig = FieldGroup & {
+    subjects?: PerformanceSubjectMapping[];
+    gradeMapping?: PerformanceGradeMapping;
+};
+
 type DataStoreConfigType = {
     key: string;
     lastUpdate: string;
     admission?: FieldGroup;
     attendance?: attendance;
     "final-result"?: FieldGroup;
-    performance?: FieldGroup;
+    performance?: PerformanceConfig;
     program?: FieldGroup;
     registration?: FieldGroup;
     "socio-economics"?: FieldGroup;
@@ -30,4 +51,4 @@ type DataStoreConfigType = {
 };
 
 
-export type { DataStoreConfigType }
+export type { DataStoreConfigType, PerformanceSubjectMapping, GradeRange, PerformanceGradeMapping, PerformanceConfig }
