@@ -9,6 +9,7 @@ interface ModalContentInterface {
     initialValues?: Record<string, any>
     setTrackedValues?: (value: any) => void
     extraContent?: React.ReactNode
+    extraContentChanged?: boolean
 }
 
 interface ModalManagerInterface {

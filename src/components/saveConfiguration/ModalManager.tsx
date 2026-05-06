@@ -38,6 +38,12 @@ function ModalManager(props: ModalManagerInterface) {
     const isPerformance = module === 'performance'
     const [subjects, setSubjects] = useState<PerformanceSubjectMapping[]>(initialValues?.subjects ?? [])
     const [gradeRanges, setGradeRanges] = useState<GradeRange[]>(initialValues?.gradeRanges ?? [])
+    const initialSubjects = initialValues?.subjects ?? []
+    const initialGradeRanges = initialValues?.gradeRanges ?? []
+    const extraContentChanged = isPerformance && (
+      JSON.stringify(subjects) !== JSON.stringify(initialSubjects) ||
+        JSON.stringify(gradeRanges) !== JSON.stringify(initialGradeRanges)
+    )
 
     const allDataElements = useMemo(() => {
         if (!programData?.programStages || !trackeValues?.programStages) return []
@@ -159,6 +165,7 @@ function ModalManager(props: ModalManagerInterface) {
                 onCancel={handleCloseModal}
                 initialValues={allInitialValues}
                 extraContent={extraContent}
+                extraContentChanged={extraContentChanged}
             />
         </ModalComponent>
     );

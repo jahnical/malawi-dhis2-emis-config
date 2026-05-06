@@ -8,9 +8,16 @@ import { ProgramLoaderState } from '../../atoms/getProgramLoaderSchema';
 import { ButtonStrip } from "@dhis2/ui";
 
 function ModalContent(props: ModalContentInterface) {
-    const { formFields, onSubmit, onCancel, initialValues, loading, setTrackedValues, extraContent } = props;
+    const { formFields, onSubmit, onCancel, initialValues,
+        loading, setTrackedValues, extraContent, extraContentChanged } = props;
     const loadingProgram = useRecoilValue<boolean>(ProgramLoaderState)
     const [currentValues, setCurrentValues] = useState<Record<string, any>>(initialValues ?? {})
+    const {subjects: _s, gradeRanges: _g, ...formInitialValues} = initialValues ?? {}
+    const {subjects: _cs, gradeRanges: _cg, ...formCurrentValues} = currentValues
+    const formChanged =
+      JSON.stringify(formCurrentValues) !== JSON.stringify(formInitialValues)
+    const isChanged = formChanged || (extraContentChanged ?? false)
+
 
     const handleSetTrackedValues = (values: any)    => {
         setCurrentValues(values)
@@ -45,7 +52,7 @@ function ModalContent(props: ModalContentInterface) {
                         </Button>
                         <Button
                           onClick={() => { onSubmit(currentValues) }}
-                          disabled={!!loading}
+                          disabled={!!loading || !isChanged}
                           color="primary"
                           variant={"contained"}
                         >
