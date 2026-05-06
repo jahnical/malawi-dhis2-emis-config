@@ -235,7 +235,16 @@ export const config = (i18n: D2I18n) => [
                 hint: i18n.t('Allow multi selection of program stage'),
                 inputType: 'MULTI_SELECT',
                 label: i18n.t('Performance/marks Program Stages'),
-                resource: 'programStages'
+                resource: 'programStages',
+                order: 0
+            },
+            gradeOptionSet: {
+                hint: i18n.t('The shared option set used for grading across all subjects'),
+                inputType: 'LIST',
+                label: i18n.t('Grade Option Set'),
+                order: 1,
+                required: true,
+                resource: 'optionSets'
             }
         },
         program: {
