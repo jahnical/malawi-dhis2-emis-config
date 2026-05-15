@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     Box, Button, MenuItem, Select, Table, TableBody, TableCell,
     TableHead, TableRow, TextField, Typography, FormControl, Paper, CircularProgress
 } from '@mui/material'
 import { TermRemarkRange } from '../../types/dataStore/dataStoreConfigType'
 import { useGetOptionSetOptions } from '../../hooks/optionSets/useGetOptionSets'
+import { ConfirmDialog } from '../../../../../components/alert/ConfirmDialog'
 
 interface TermRemarksTableProps {
     optionSetId: string | null
@@ -14,6 +15,7 @@ interface TermRemarksTableProps {
 
 function TermRemarksTable({ optionSetId, value, onChange }: TermRemarksTableProps) {
     const { options, loading, fetchOptions } = useGetOptionSetOptions(optionSetId)
+    const [pendingRemoveIndex, setPendingRemoveIndex] = useState<number | null>(null)
 
     useEffect(() => {
         if (optionSetId) fetchOptions(optionSetId)
@@ -113,7 +115,7 @@ function TermRemarksTable({ optionSetId, value, onChange }: TermRemarksTableProp
                                         />
                                     </TableCell>
                                     <TableCell>
-                                        <Button size="small" color="error" onClick={() => removeRow(index)}>
+                                        <Button size="small" color="error" onClick={() => setPendingRemoveIndex(index)}>
                                             Remove
                                         </Button>
                                     </TableCell>
@@ -128,6 +130,15 @@ function TermRemarksTable({ optionSetId, value, onChange }: TermRemarksTableProp
                     + Add Row
                 </Button>
             </Box>
+            <ConfirmDialog
+                open={pendingRemoveIndex !== null}
+                message="Are you sure you want to remove this term remark range?"
+                onConfirm={() => {
+                    if (pendingRemoveIndex !== null) removeRow(pendingRemoveIndex)
+                    setPendingRemoveIndex(null)
+                }}
+                onCancel={() => setPendingRemoveIndex(null)}
+            />
         </Box>
     )
 }

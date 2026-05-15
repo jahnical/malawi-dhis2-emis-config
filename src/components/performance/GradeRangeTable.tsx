@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     Box, Button, MenuItem, Select, Table, TableBody, TableCell,
     TableHead, TableRow, TextField, Typography, FormControl, Paper, CircularProgress
 } from '@mui/material'
 import { GradeRange } from '../../types/dataStore/dataStoreConfigType'
 import { useGetOptionSetOptions } from '../../hooks/optionSets/useGetOptionSets'
+import { ConfirmDialog } from '../../../../../components/alert/ConfirmDialog'
 
 interface GradeRangeTableProps {
     gradeOptionSetId: string | null
@@ -14,6 +15,7 @@ interface GradeRangeTableProps {
 
 function GradeRangeTable({ gradeOptionSetId, value, onChange }: GradeRangeTableProps) {
     const { options, loading, fetchOptions } = useGetOptionSetOptions(gradeOptionSetId)
+    const [pendingRemoveIndex, setPendingRemoveIndex] = useState<number | null>(null)
 
     useEffect(() => {
         if (gradeOptionSetId) {
@@ -121,7 +123,7 @@ function GradeRangeTable({ gradeOptionSetId, value, onChange }: GradeRangeTableP
                                         <Button
                                             size="small"
                                             color="error"
-                                            onClick={() => removeRow(index)}
+                                            onClick={() => setPendingRemoveIndex(index)}
                                         >
                                             Remove
                                         </Button>
@@ -137,6 +139,15 @@ function GradeRangeTable({ gradeOptionSetId, value, onChange }: GradeRangeTableP
                     + Add Row
                 </Button>
             </Box>
+            <ConfirmDialog
+                open={pendingRemoveIndex !== null}
+                message="Are you sure you want to remove this grade range?"
+                onConfirm={() => {
+                    if (pendingRemoveIndex !== null) removeRow(pendingRemoveIndex)
+                    setPendingRemoveIndex(null)
+                }}
+                onCancel={() => setPendingRemoveIndex(null)}
+            />
         </Box>
     )
 }

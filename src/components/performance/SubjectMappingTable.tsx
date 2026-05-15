@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
     Box, Button, MenuItem, Select, Table, TableBody, TableCell,
     TableHead, TableRow, Typography, FormControl, Paper
 } from '@mui/material'
 import { PerformanceSubjectMapping } from '../../types/dataStore/dataStoreConfigType'
+import { ConfirmDialog } from '../../../../../components/alert/ConfirmDialog'
 
 export interface DataElementOption {
     id: string
@@ -21,6 +22,7 @@ interface SubjectMappingTableProps {
 function SubjectMappingTable({ allDataElements, gradeOptionSetId, value, onChange }: SubjectMappingTableProps) {
     const scoreDEs = allDataElements.filter(de => !de.optionSetValue)
     const gradeDEs = allDataElements.filter(de => de.optionSetValue)
+    const [pendingRemoveIndex, setPendingRemoveIndex] = useState<number | null>(null)
 
     const addRow = () => {
         onChange([...value, { scoreDataElement: '', gradeDataElement: '' }])
@@ -148,7 +150,7 @@ function SubjectMappingTable({ allDataElements, gradeOptionSetId, value, onChang
                                       </FormControl>
                                   </TableCell>
                                   <TableCell>
-                                      <Button size="small" color="error" onClick={() => removeRow(index)}>
+                                      <Button size="small" color="error" onClick={() => setPendingRemoveIndex(index)}>
                                           Remove
                                       </Button>
                                   </TableCell>
@@ -164,6 +166,15 @@ function SubjectMappingTable({ allDataElements, gradeOptionSetId, value, onChang
                     + Add Row
                 </Button>
             </Box>
+            <ConfirmDialog
+                open={pendingRemoveIndex !== null}
+                message="Are you sure you want to remove this subject mapping?"
+                onConfirm={() => {
+                    if (pendingRemoveIndex !== null) removeRow(pendingRemoveIndex)
+                    setPendingRemoveIndex(null)
+                }}
+                onCancel={() => setPendingRemoveIndex(null)}
+            />
         </Box>
     )
 }
