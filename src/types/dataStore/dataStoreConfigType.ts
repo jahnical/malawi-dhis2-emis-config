@@ -31,9 +31,23 @@ type PerformanceGradeMapping = {
     ranges: GradeRange[];
 };
 
+type TermRemarkRange = {
+    optionCode: string;
+    minPercentage: number;
+    maxPercentage: number;
+};
+
+type TermRemarksMapping = {
+    dataElement: string;
+    optionSet: string;
+    ranges: TermRemarkRange[];
+};
+
 type PerformanceConfig = FieldGroup & {
     subjects?: PerformanceSubjectMapping[];
     gradeMapping?: PerformanceGradeMapping;
+    maxSubjectScore?: number;
+    termRemarksMapping?: TermRemarksMapping;
 };
 
 type DataStoreConfigType = {
@@ -51,4 +65,4 @@ type DataStoreConfigType = {
 };
 
 
-export type { DataStoreConfigType, PerformanceSubjectMapping, GradeRange, PerformanceGradeMapping, PerformanceConfig }
+export type { DataStoreConfigType, PerformanceSubjectMapping, GradeRange, PerformanceGradeMapping, PerformanceConfig, TermRemarkRange, TermRemarksMapping }
