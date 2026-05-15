@@ -261,7 +261,10 @@ const performanceBodyToForm = (dataStoreValues: any, module: string) => {
         programStages: dataStoreValues?.[module]?.programStages?.map((x: any) => x.programStage),
         gradeOptionSet: dataStoreValues?.[module]?.gradeMapping?.gradeOptionSet ?? null,
         subjects: dataStoreValues?.[module]?.subjects ?? [],
-        gradeRanges: dataStoreValues?.[module]?.gradeMapping?.ranges ?? []
+        gradeRanges: dataStoreValues?.[module]?.gradeMapping?.ranges ?? [],
+        maxSubjectScore: dataStoreValues?.[module]?.maxSubjectScore ?? 100,
+        termRemarksDataElement: dataStoreValues?.[module]?.termRemarksMapping?.dataElement ?? '',
+        termRemarksRanges: dataStoreValues?.[module]?.termRemarksMapping?.ranges ?? []
     }
 }
 
@@ -275,7 +278,15 @@ const performancePostBody = (formValues: any) => {
             gradeMapping: {
                 gradeOptionSet: formValues?.gradeOptionSet ?? null,
                 ranges: formValues?.gradeRanges ?? []
-            }
+            },
+            maxSubjectScore: formValues?.maxSubjectScore ?? 100,
+            ...(formValues?.termRemarksDataElement ? {
+                termRemarksMapping: {
+                    dataElement: formValues.termRemarksDataElement,
+                    optionSet: formValues.termRemarksOptSetId ?? '',
+                    ranges: formValues?.termRemarksRanges ?? []
+                }
+            } : {})
         }
     }
 }
