@@ -294,6 +294,7 @@ const admissionPostBody = (formValues: any) => {
             enabled: formValues?.enabled ?? true,
             admissionDate: formValues?.admissionDate,
             studentIdentifier: formValues?.studentIdentifier,
+            academicYearAttribute: formValues?.academicYearAttribute,
             replaceIdentifierYearPrefix: formValues?.replaceIdentifierYearPrefix === 'true' || formValues?.replaceIdentifierYearPrefix === true,
             lastUpdate: new Date().toISOString()
         }

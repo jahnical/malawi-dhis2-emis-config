@@ -22,11 +22,21 @@ export const config = (i18n: D2I18n) => [
                 order: 2,
                 required: false
             },
+            academicYearAttribute: {
+                filter: 'valueType:eq:TEXT',
+                hint: i18n.t('Attribute used to store the academic year a student is admitted into. Auto-filled from the selected academic year on admission.'),
+                resource: 'attributes',
+                inputType: 'LIST',
+                label: i18n.t('Academic Year'),
+                order: 3,
+                required: false,
+                valueType: 'TEXT'
+            },
             replaceIdentifierYearPrefix: {
                 inputType: 'BOOLEAN',
-                label: i18n.t('Replace first 4 digits with next admission year'),
-                hint: i18n.t('When enabled, the first 4 digits of a generated student identifier are replaced with the next year of the admission date (admission year + 1).'),
-                order: 3,
+                label: i18n.t('Replace first 4 digits with the academic year'),
+                hint: i18n.t('When enabled, the first 4 digits of a generated student identifier are replaced with the upper (later) year of the selected academic year.'),
+                order: 4,
                 required: false
             }
         },
