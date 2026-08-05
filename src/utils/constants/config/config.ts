@@ -245,6 +245,13 @@ export const config = (i18n: D2I18n) => [
                 order: 1,
                 required: true,
                 resource: 'optionSets'
+            },
+            standardGroupOptionSet: {
+                hint: i18n.t('Option set identifying Standard Groups (e.g. Junior/Middle/Senior) — optional'),
+                inputType: 'LIST',
+                label: i18n.t('Standard Group Option Set'),
+                order: 2,
+                resource: 'optionSets'
             }
         },
         program: {

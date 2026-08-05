@@ -18,6 +18,18 @@ type attendance = FieldGroup & { attendanceStatus: FieldGroup };
 type PerformanceSubjectMapping = {
     scoreDataElement: string;
     gradeDataElement: string;
+    universal?: boolean;
+};
+
+type StandardGroup = {
+    optionCode: string;
+    standards: string[];
+    subjects: string[];
+};
+
+type StandardGroupMapping = {
+    standardGroupOptionSet: string;
+    groups: StandardGroup[];
 };
 
 type GradeRange = {
@@ -48,6 +60,7 @@ type PerformanceConfig = FieldGroup & {
     gradeMapping?: PerformanceGradeMapping;
     maxSubjectScore?: number;
     termRemarksMapping?: TermRemarksMapping;
+    standardGroupMapping?: StandardGroupMapping;
 };
 
 type DataStoreConfigType = {
@@ -65,4 +78,4 @@ type DataStoreConfigType = {
 };
 
 
-export type { DataStoreConfigType, PerformanceSubjectMapping, GradeRange, PerformanceGradeMapping, PerformanceConfig, TermRemarkRange, TermRemarksMapping }
+export type { DataStoreConfigType, PerformanceSubjectMapping, GradeRange, PerformanceGradeMapping, PerformanceConfig, TermRemarkRange, TermRemarksMapping, StandardGroup, StandardGroupMapping }

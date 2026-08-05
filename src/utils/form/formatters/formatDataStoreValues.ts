@@ -264,7 +264,9 @@ const performanceBodyToForm = (dataStoreValues: any, module: string) => {
         gradeRanges: dataStoreValues?.[module]?.gradeMapping?.ranges ?? [],
         maxSubjectScore: dataStoreValues?.[module]?.maxSubjectScore ?? 100,
         termRemarksDataElement: dataStoreValues?.[module]?.termRemarksMapping?.dataElement ?? '',
-        termRemarksRanges: dataStoreValues?.[module]?.termRemarksMapping?.ranges ?? []
+        termRemarksRanges: dataStoreValues?.[module]?.termRemarksMapping?.ranges ?? [],
+        standardGroupOptionSet: dataStoreValues?.[module]?.standardGroupMapping?.standardGroupOptionSet ?? null,
+        standardGroups: dataStoreValues?.[module]?.standardGroupMapping?.groups ?? []
     }
 }
 
@@ -285,6 +287,12 @@ const performancePostBody = (formValues: any) => {
                     dataElement: formValues.termRemarksDataElement,
                     optionSet: formValues.termRemarksOptSetId ?? '',
                     ranges: formValues?.termRemarksRanges ?? []
+                }
+            } : {}),
+            ...(formValues?.standardGroupOptionSet ? {
+                standardGroupMapping: {
+                    standardGroupOptionSet: formValues.standardGroupOptionSet,
+                    groups: formValues?.standardGroups ?? []
                 }
             } : {})
         }

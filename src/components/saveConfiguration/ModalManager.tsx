@@ -10,12 +10,13 @@ import { ProgramDataState } from "../../atoms/ProgramDataSchema";
 import useGetDataStore from "../../hooks/dataStore/useGetDataStore";
 import { modulePostBody } from "../../utils/form/formatters/formatDataStoreValues";
 import { DataStoreConfigState } from "../../atoms/DataStoreSchema";
-import { DataStoreConfigType, PerformanceSubjectMapping, GradeRange, TermRemarkRange } from "../../types/dataStore/dataStoreConfigType";
+import { DataStoreConfigType, PerformanceSubjectMapping, GradeRange, TermRemarkRange, StandardGroup } from "../../types/dataStore/dataStoreConfigType";
 import { SchoolCalendarState } from "../../atoms/schoolCalendar";
 import useShowAlerts from "../../hooks/alert/useShowAlert";
 import SubjectMappingTable, { DataElementOption } from "../performance/SubjectMappingTable";
 import GradeRangeTable from "../performance/GradeRangeTable";
 import TermRemarksTable from "../performance/TermRemarksTable";
+import StandardGroupsTable from "../performance/StandardGroupsTable";
 import { useGetDataElementOptionSet } from "../../hooks/dataElements/useGetDataElementOptionSet";
 import { Box, Divider, MenuItem, Select, TextField, Typography, FormControl, InputLabel } from "@mui/material";
 
@@ -45,23 +46,32 @@ function ModalManager(props: ModalManagerInterface) {
     const [termRemarksDataElement, setTermRemarksDataElement] = useState<string>(initialValues?.termRemarksDataElement ?? '')
     const [termRemarksRanges, setTermRemarksRanges] = useState<TermRemarkRange[]>(initialValues?.termRemarksRanges ?? [])
     const { optionSetId: termRemarksOptSetId, fetchOptionSetId } = useGetDataElementOptionSet()
+    const [standardGroups, setStandardGroups] = useState<StandardGroup[]>(initialValues?.standardGroups ?? [])
+    const { optionSetId: standardsOptionSetId, fetchOptionSetId: fetchStandardsOptionSetId } = useGetDataElementOptionSet()
 
     const initialSubjects = initialValues?.subjects ?? []
     const initialGradeRanges = initialValues?.gradeRanges ?? []
     const initialMaxSubjectScore = initialValues?.maxSubjectScore ?? 100
     const initialTermRemarksDE = initialValues?.termRemarksDataElement ?? ''
     const initialTermRemarksRanges = initialValues?.termRemarksRanges ?? []
+    const initialStandardGroups = initialValues?.standardGroups ?? []
     const extraContentChanged = isPerformance && (
         JSON.stringify(subjects) !== JSON.stringify(initialSubjects) ||
         JSON.stringify(gradeRanges) !== JSON.stringify(initialGradeRanges) ||
         maxSubjectScore !== initialMaxSubjectScore ||
         termRemarksDataElement !== initialTermRemarksDE ||
-        JSON.stringify(termRemarksRanges) !== JSON.stringify(initialTermRemarksRanges)
+        JSON.stringify(termRemarksRanges) !== JSON.stringify(initialTermRemarksRanges) ||
+        JSON.stringify(standardGroups) !== JSON.stringify(initialStandardGroups)
     )
 
     useEffect(() => {
         if (termRemarksDataElement) fetchOptionSetId(termRemarksDataElement)
     }, [termRemarksDataElement])
+
+    const registrationGradeDataElement = prevDataStore?.find((x: any) => x.program == programData?.id)?.registration?.grade
+    useEffect(() => {
+        if (registrationGradeDataElement) fetchStandardsOptionSetId(registrationGradeDataElement)
+    }, [registrationGradeDataElement])
 
     const allDataElements = useMemo(() => {
         if (!programData?.programStages || !trackeValues?.programStages) return []
@@ -97,7 +107,7 @@ function ModalManager(props: ModalManagerInterface) {
         try {
             setLoading(true)
             const enriched = isPerformance
-            ? { ...e, subjects, gradeRanges, maxSubjectScore, termRemarksDataElement, termRemarksRanges, termRemarksOptSetId }
+            ? { ...e, subjects, gradeRanges, maxSubjectScore, termRemarksDataElement, termRemarksRanges, termRemarksOptSetId, standardGroups }
             : e
             const configKey = config?.find(x => x.key == section)
             let postData = modulePostBody(enriched, programData, prevDataStore as unknown as DataStoreConfigType[], configKey)
@@ -150,6 +160,13 @@ function ModalManager(props: ModalManagerInterface) {
 
     const optionSetDEs = allDataElements.filter(de => de.optionSetValue)
 
+    const pickableSubjects = subjects
+        .filter(s => !s.universal && s.scoreDataElement)
+        .map(s => ({
+            id: s.scoreDataElement,
+            displayName: allDataElements.find(de => de.id === s.scoreDataElement)?.displayName ?? s.scoreDataElement
+        }))
+
     const extraContent = isPerformance ? (
         <>
             <SubjectMappingTable
@@ -201,6 +218,14 @@ function ModalManager(props: ModalManagerInterface) {
                     onChange={setTermRemarksRanges}
                 />
             </Box>
+            <Divider sx={{ my: 3 }} />
+            <StandardGroupsTable
+                standardGroupOptionSetId={trackeValues?.standardGroupOptionSet ?? null}
+                standardsOptionSetId={standardsOptionSetId}
+                pickableSubjects={pickableSubjects}
+                value={standardGroups}
+                onChange={setStandardGroups}
+            />
         </>
     ) : undefined
 
