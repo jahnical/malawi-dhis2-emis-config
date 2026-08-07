@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
     Box, Button, MenuItem, Select, Table, TableBody, TableCell,
-    TableHead, TableRow, Typography, FormControl, Paper
+    TableHead, TableRow, Typography, FormControl, Paper, Checkbox, Tooltip
 } from '@mui/material'
 import { PerformanceSubjectMapping } from '../../types/dataStore/dataStoreConfigType'
+import { ConfirmDialog } from '../../../../../components/alert/ConfirmDialog'
 
 export interface DataElementOption {
     id: string
@@ -21,6 +22,7 @@ interface SubjectMappingTableProps {
 function SubjectMappingTable({ allDataElements, gradeOptionSetId, value, onChange }: SubjectMappingTableProps) {
     const scoreDEs = allDataElements.filter(de => !de.optionSetValue)
     const gradeDEs = allDataElements.filter(de => de.optionSetValue)
+    const [pendingRemoveIndex, setPendingRemoveIndex] = useState<number | null>(null)
 
     const addRow = () => {
         onChange([...value, { scoreDataElement: '', gradeDataElement: '' }])
@@ -31,7 +33,7 @@ function SubjectMappingTable({ allDataElements, gradeOptionSetId, value, onChang
         onChange(updated)
     }
 
-    const updateRow = (index: number, field: keyof PerformanceSubjectMapping, newValue: string) => {
+    const updateRow = (index: number, field: keyof PerformanceSubjectMapping, newValue: string | boolean) => {
         const updated = value.map((row, i) =>
             i === index ? { ...row, [field]: newValue } : row
         )
@@ -53,13 +55,18 @@ function SubjectMappingTable({ allDataElements, gradeOptionSetId, value, onChang
                         <TableRow>
                             <TableCell><strong>Score Data Element</strong></TableCell>
                             <TableCell><strong>Grade Data Element</strong></TableCell>
+                            <TableCell>
+                                <Tooltip title="Applies to every Standard Group automatically — no need to pick it in the Standard Groups table below">
+                                    <strong>Universal</strong>
+                                </Tooltip>
+                            </TableCell>
                             <TableCell width={80} />
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {value.length === 0 && (
                             <TableRow>
-                                <TableCell colSpan={3} align="center" sx={{ color: 'text.secondary', py: 2 }}>
+                                <TableCell colSpan={4} align="center" sx={{ color: 'text.secondary', py: 2 }}>
                                     No mappings configured. Click "Add Row" to begin.
                                 </TableCell>
                             </TableRow>
@@ -148,7 +155,13 @@ function SubjectMappingTable({ allDataElements, gradeOptionSetId, value, onChang
                                       </FormControl>
                                   </TableCell>
                                   <TableCell>
-                                      <Button size="small" color="error" onClick={() => removeRow(index)}>
+                                      <Checkbox
+                                        checked={Boolean(row.universal)}
+                                        onChange={e => updateRow(index, 'universal', e.target.checked)}
+                                      />
+                                  </TableCell>
+                                  <TableCell>
+                                      <Button size="small" color="error" onClick={() => setPendingRemoveIndex(index)}>
                                           Remove
                                       </Button>
                                   </TableCell>
@@ -164,6 +177,15 @@ function SubjectMappingTable({ allDataElements, gradeOptionSetId, value, onChang
                     + Add Row
                 </Button>
             </Box>
+            <ConfirmDialog
+                open={pendingRemoveIndex !== null}
+                message="Are you sure you want to remove this subject mapping?"
+                onConfirm={() => {
+                    if (pendingRemoveIndex !== null) removeRow(pendingRemoveIndex)
+                    setPendingRemoveIndex(null)
+                }}
+                onCancel={() => setPendingRemoveIndex(null)}
+            />
         </Box>
     )
 }
