@@ -1,4 +1,5 @@
 import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { DataStoreState } from 'dhis2-semis-components'
 import { useUrlParams } from 'dhis2-semis-functions'
 import useGetPrograms from '../../program/useGetPrograms'
 import { formStudentEnrollmentForm } from '../../../utils/form'
@@ -34,6 +35,7 @@ const useBuildForm = ({ trackeValues, i18n }: { trackeValues?: any, i18n: D2I18n
     const module = useQuery.get('module')
     const section = useQuery.get('section') as SectionType
     const dataStoreConfig = useRecoilValue(DataStoreConfigState)
+    const savedDataStore = useRecoilValue(DataStoreState)
     const { buildStudentProgramForm } = useBuildStudentProgramForm()
     const { buildStudentGeneralForm } = useBuildStudentGeneralForm()
     const { buildStudentEnrollmentForm } = useBuildStudentEnrollmentForm()
@@ -121,13 +123,16 @@ const useBuildForm = ({ trackeValues, i18n }: { trackeValues?: any, i18n: D2I18n
 
             case 'final-result':
                 const frStageDataElements = getDataElements(data?.programStages, trackeValues?.programStageFinalResult)
+                // Saved registration stage of this section, for settings that pick registration fields
+                const registrationStageId = (savedDataStore as any[])?.find((x: any) => x?.key === section)?.registration?.programStage
                 const fields = data
                     ? buildStudentFinalResultForm(
                         {
                             dataStoreConfig: dataStoreConfig,
                             programStages: data?.programStages ?? []
                         },
-                        frStageDataElements
+                        frStageDataElements,
+                        getDataElements(data?.programStages, registrationStageId) ?? []
                     )
                     : []
 
