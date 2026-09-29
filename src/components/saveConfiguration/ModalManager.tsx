@@ -71,7 +71,7 @@ function ModalManager(props: ModalManagerInterface) {
         setOpen(false);
     }
 
-    function onSubmit(e: Record<string, any>): void {
+    async function onSubmit(e: Record<string, any>): Promise<void> {
         if (!formVariables?.flatMap((x: any) => x.fields).flat()?.every((field: any) =>
             (!field?.required) || (field?.required && e[field.name])
         )) return
@@ -88,40 +88,26 @@ function ModalManager(props: ModalManagerInterface) {
                 postData[keyIndex] = { ...postData[keyIndex], [enriched?.module]: rest }
             }
 
-            createDataStore({
+            await createDataStore({
                 data: postData,
                 key: 'dataStore/semis/values',
-            }).then(async () => {
-                if (academicYear) {
-                    await createDataStore({
-                        key: "dataStore/semis/schoolCalendar",
-                        data: { ...calendar, academicYear: academicYear }
-                    }).then(() => {
-                        refetch().then(() => {
-                            setLoading(false);
-                            show({
-                                message: i18n.t(`Configurations saved successfuly`),
-                                type: { success: true }
-                            })
-                            handleCloseModal()
-                        })
-                    })
-                } else {
-                    refetch().then(() => {
-                        setLoading(false);
-                        show({
-                            message: i18n.t(`Configurations saved successfuly`),
-                            type: { success: true }
-                        })
-                        handleCloseModal()
-                    })
-                }
             })
+            if (academicYear) {
+                await createDataStore({
+                    key: "dataStore/semis/schoolCalendar",
+                    data: { ...calendar, academicYear }
+                })
+            }
+            await refetch()
+            show({ message: i18n.t('Configurations saved successfuly'), type: { success: true } })
+            handleCloseModal()
         } catch (error: any) {
             show({
                 message: `${i18n.t("Unable to save data")}: ${error.message}`,
                 type: { critical: true }
             });
+        } finally {
+            setLoading(false)
         }
     }
 
