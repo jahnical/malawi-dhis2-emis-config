@@ -190,6 +190,7 @@ const finalResultPostBody = (formValues: any) => {
             validStatusValue: formValues?.programStages,
             dropoutStatusValues: formValues?.dropout,
             status: formValues.status,
+            adjustableFields: formValues?.adjustableFields,
             lastUpdate: new Date().toISOString()
         }
     }
