@@ -7,7 +7,8 @@ function useBuildStudentFinalResultForm() {
     const { useQuery } = useUrlParams()
     const section = useQuery.get("section") as SectionType
 
-    const buildStudentFinalResultForm = ({ dataStoreConfig, programStages }: any, dataElements: any) => {
+    // registrationDataElements: options for fields that pick from the registration stage
+    const buildStudentFinalResultForm = ({ dataStoreConfig, programStages }: any, dataElements: any, registrationDataElements: any[] = []) => {
         const formFieldsList: ConfigCustomAttributeProps[] = []
         const finalResult: any = getDataStoreConfigKeys({ dataStoreConfig, sectionType: section, element: "final-result" })
         const { finalResultStatus, ...rest } = finalResult
@@ -20,7 +21,7 @@ function useBuildStudentFinalResultForm() {
                         id: element,
                         name: element,
                         visible: true,
-                        required: true,
+                        required: configuratioKey?.required ?? true,
                         disabled: false,
                         order: configuratioKey?.order,
                         type: configuratioKey?.inputType,
@@ -35,8 +36,9 @@ function useBuildStudentFinalResultForm() {
                                 id: element,
                                 options: configuratioKey?.resource == "programStages" ?
                                     programStages?.map((prog: any) =>
-                                        ({ value: prog.id, label: prog.displayName })) : dataElements
-                                            ?.map((dx: any) => ({ value: dx?.dataElement?.id, label: dx?.dataElement?.displayName }))
+                                        ({ value: prog.id, label: prog.displayName }))
+                                    : (configuratioKey?.resource == "registrationDataElements" ? registrationDataElements : dataElements)
+                                        ?.map((dx: any) => ({ value: dx?.dataElement?.id, label: dx?.dataElement?.displayName }))
                             }
                         }
                     }

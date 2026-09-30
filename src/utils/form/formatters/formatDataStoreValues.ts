@@ -190,6 +190,7 @@ const finalResultPostBody = (formValues: any) => {
             validStatusValue: formValues?.programStages,
             dropoutStatusValues: formValues?.dropout,
             status: formValues.status,
+            adjustableFields: formValues?.adjustableFields,
             lastUpdate: new Date().toISOString()
         }
     }
@@ -313,6 +314,7 @@ const admissionPostBody = (formValues: any) => {
             enabled: formValues?.enabled ?? true,
             admissionDate: formValues?.admissionDate,
             studentIdentifier: formValues?.studentIdentifier,
+            academicYearAttribute: formValues?.academicYearAttribute,
             replaceIdentifierYearPrefix: formValues?.replaceIdentifierYearPrefix === 'true' || formValues?.replaceIdentifierYearPrefix === true,
             lastUpdate: new Date().toISOString()
         }

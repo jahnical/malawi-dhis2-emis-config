@@ -22,11 +22,21 @@ export const config = (i18n: D2I18n) => [
                 order: 2,
                 required: false
             },
+            academicYearAttribute: {
+                filter: 'valueType:eq:TEXT',
+                hint: i18n.t('Attribute used to store the academic year a student is admitted into. Auto-filled from the selected academic year on admission.'),
+                resource: 'attributes',
+                inputType: 'LIST',
+                label: i18n.t('Academic Year'),
+                order: 3,
+                required: false,
+                valueType: 'TEXT'
+            },
             replaceIdentifierYearPrefix: {
                 inputType: 'BOOLEAN',
-                label: i18n.t('Replace first 4 digits with next admission year'),
-                hint: i18n.t('When enabled, the first 4 digits of a generated student identifier are replaced with the next year of the admission date (admission year + 1).'),
-                order: 3,
+                label: i18n.t('Replace first 4 digits with the academic year'),
+                hint: i18n.t('When enabled, the first 4 digits of a generated student identifier are replaced with the upper (later) year of the selected academic year.'),
+                order: 4,
                 required: false
             }
         },
@@ -564,33 +574,46 @@ export const config = (i18n: D2I18n) => [
                 valueType: 'BOOLEAN'
             }
         },
+        // Staff re-enrollment carries each person's record forward; a status stage is optional and
+        // only used to leave people with an exit status (terminated, retired, ...) unticked
         'final-result': {
             programStageFinalResult: {
                 filter: 'repeatable:eq:false',
-                hint: i18n.t('Non-Repeatable Program Stage'),
+                hint: i18n.t('Optional. Non-repeatable stage where an end-of-year status (e.g. continuing, terminated) is recorded'),
                 inputType: 'LIST',
-                label: i18n.t('Final Result Program Stage'),
+                label: i18n.t('Re-enrollment status stage'),
                 order: 0,
+                required: false,
                 resource: 'programStages'
             },
             finalResultStatus: {
                 programStages: {
                     filter: 'valueType:eq:TEXT',
-                    hint: i18n.t('List of final result status that allows staff promotion'),
+                    hint: i18n.t('Optional. Statuses that allow a staff member to be carried forward; anyone with another status starts unticked'),
                     inputType: 'MULTI_SELECT',
-                    label: i18n.t('Promotable Status'),
+                    label: i18n.t('Continuing statuses'),
+                    required: false,
                     resource: 'optionSets'
                 }
             },
             status: {
                 filter: 'valueType:eq:TEXT',
-                hint: i18n.t('Data Element'),
+                hint: i18n.t('Optional. Data element holding the re-enrollment status'),
                 inputType: 'LIST',
-                label: i18n.t('Final result status'),
+                label: i18n.t('Re-enrollment status'),
                 optionSetValue: false,
                 order: 1,
+                required: false,
                 resource: 'dataElements',
                 valueType: 'TEXT'
+            },
+            adjustableFields: {
+                hint: i18n.t('Registration fields that can be changed for each staff member when carrying them forward to a new academic year (e.g. class/standard). Everything else is copied unchanged.'),
+                inputType: 'MULTI_SELECT',
+                label: i18n.t('Adjustable fields on carry-forward'),
+                order: 2,
+                required: false,
+                resource: 'registrationDataElements'
             }
         },
         key: 'staff',
