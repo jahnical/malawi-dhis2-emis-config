@@ -12,8 +12,8 @@ function ModalContent(props: ModalContentInterface) {
         loading, setTrackedValues, extraContent, extraContentChanged } = props;
     const loadingProgram = useRecoilValue<boolean>(ProgramLoaderState)
     const [currentValues, setCurrentValues] = useState<Record<string, any>>(initialValues ?? {})
-    const {subjects: _s, gradeRanges: _g, ...formInitialValues} = initialValues ?? {}
-    const {subjects: _cs, gradeRanges: _cg, ...formCurrentValues} = currentValues
+    const {subjects: _s, gradeRanges: _g, maxSubjectScore: _m, termRemarksDataElement: _td, termRemarksRanges: _tr, termRemarksOptSetId: _to, ...formInitialValues} = initialValues ?? {}
+    const {subjects: _cs, gradeRanges: _cg, maxSubjectScore: _cm, termRemarksDataElement: _ctd, termRemarksRanges: _ctr, termRemarksOptSetId: _cto, ...formCurrentValues} = currentValues
     const formChanged =
       JSON.stringify(formCurrentValues) !== JSON.stringify(formInitialValues)
     const isChanged = formChanged || (extraContentChanged ?? false)
