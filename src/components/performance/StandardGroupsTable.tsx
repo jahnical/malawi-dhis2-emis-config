@@ -90,6 +90,11 @@ function StandardGroupsTable({ standardGroupOptionSetId, standardsOptionSetId, p
                                 .filter(Boolean)
                             const availableGroupOptions = groupOptions.filter(opt => !usedCodes.includes(opt.code))
 
+                            const usedStandards = value
+                                .filter((_, i) => i !== index)
+                                .flatMap(r => r.standards ?? [])
+                            const availableStandardOptions = standardOptions.filter(opt => !usedStandards.includes(opt.code))
+
                             return (
                                 <TableRow key={index}>
                                     <TableCell>
@@ -120,7 +125,7 @@ function StandardGroupsTable({ standardGroupOptionSetId, standardsOptionSetId, p
                                                 displayEmpty
                                                 disabled={loadingStandards}
                                             >
-                                                {standardOptions.map(opt => (
+                                                {availableStandardOptions.map(opt => (
                                                     <MenuItem key={opt.id} value={opt.code}>
                                                         <Checkbox checked={(row.standards ?? []).includes(opt.code)} />
                                                         <ListItemText primary={opt.displayName} />
