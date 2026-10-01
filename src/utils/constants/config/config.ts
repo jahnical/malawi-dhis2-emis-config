@@ -15,16 +15,16 @@ export const config = (i18n: D2I18n) => [
             },
             studentIdentifier: {
                 filter: '',
-                hint: i18n.t('Attribute used as student identifier. If left empty by the user during admission, the system will auto-generate a value using the attribute pattern.'),
+                hint: i18n.t('Attribute used as learner identifier. If left empty by the user during admission, the system will auto-generate a value using the attribute pattern.'),
                 resource: 'attributes',
                 inputType: 'LIST',
-                label: i18n.t('Student Identifier'),
+                label: i18n.t('Learner Identifier'),
                 order: 2,
                 required: false
             },
             academicYearAttribute: {
                 filter: 'valueType:eq:TEXT',
-                hint: i18n.t('Attribute used to store the academic year a student is admitted into. Auto-filled from the selected academic year on admission.'),
+                hint: i18n.t('Attribute used to store the academic year a learner is admitted into. Auto-filled from the selected academic year on admission.'),
                 resource: 'attributes',
                 inputType: 'LIST',
                 label: i18n.t('Academic Year'),
@@ -35,7 +35,7 @@ export const config = (i18n: D2I18n) => [
             replaceIdentifierYearPrefix: {
                 inputType: 'BOOLEAN',
                 label: i18n.t('Replace first 4 digits with the academic year'),
-                hint: i18n.t('When enabled, the first 4 digits of a generated student identifier are replaced with the upper (later) year of the selected academic year.'),
+                hint: i18n.t('When enabled, the first 4 digits of a generated learner identifier are replaced with the upper (later) year of the selected academic year.'),
                 order: 4,
                 required: false
             }
@@ -221,7 +221,7 @@ export const config = (i18n: D2I18n) => [
             finalResultStatus: {
                 programStages: {
                     filter: 'valueType:eq:TEXT',
-                    hint: i18n.t('List of final result status that allows student promotion'),
+                    hint: i18n.t('List of final result status that allows learner promotion'),
                     inputType: 'MULTI_SELECT',
                     label: i18n.t('Promotable Status'),
                     order: 0,
@@ -229,7 +229,7 @@ export const config = (i18n: D2I18n) => [
                 },
                 dropout: {
                     filter: 'valueType:eq:TEXT',
-                    hint: i18n.t('List of final result status that allows student dropout'),
+                    hint: i18n.t('List of final result status that allows learner dropout'),
                     inputType: 'MULTI_SELECT',
                     label: i18n.t('Dropout Status'),
                     order: 1,
@@ -269,7 +269,7 @@ export const config = (i18n: D2I18n) => [
                 filter: '',
                 hint: i18n.t('Tracker Program'),
                 inputType: 'LIST',
-                label: i18n.t('Student Program'),
+                label: i18n.t('Learner Program'),
                 resource: 'programs'
             }
         },

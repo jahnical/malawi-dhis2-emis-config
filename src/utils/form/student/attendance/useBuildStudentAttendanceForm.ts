@@ -28,7 +28,7 @@ function formStudentAttendance({ attendanceDetails, programFields, attendanceSta
         }] : []),
         ...(attendanceClassConfig?.length > 0 ? [{
             visible: true,
-            description: "The Class Attendance Configuration section allows administrators to define how the system interprets and records student attendance status.",
+            description: "The Class Attendance Configuration section allows administrators to define how the system interprets and records learner attendance status.",
             name: i18n.t('Class Attendance Configuration'),
             fields: [...attendanceClassConfig]
         }] : [])

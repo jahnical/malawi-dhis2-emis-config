@@ -24,7 +24,7 @@ const staffCards = (i18n: D2I18n) => [
 ];
 
 const dashboardData = (i18n: D2I18n) => [
-    { key: 0, title: "Student", cards: studentCards(i18n) },
+    { key: 0, title: "Learner", cards: studentCards(i18n) },
     { key: 1, title: "Staff", cards: staffCards(i18n) }
 ]
 

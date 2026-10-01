@@ -142,7 +142,7 @@ function ModalManager(props: ModalManagerInterface) {
     }
 
     const formatedName = capitalizeString(name!)
-    const formatedSection = capitalizeString(section!)
+    const formatedSection = capitalizeString(section === 'student' ? 'learner' : section!)
 
     const optionSetDEs = allDataElements.filter(de => de.optionSetValue)
 
