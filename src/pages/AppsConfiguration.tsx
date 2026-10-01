@@ -139,9 +139,9 @@ const AppsConfiguration = ({ i18n }: { i18n: D2I18n }) => {
     <Box>
       <WithPadding p="1rem">
         {
-          dashboardData(i18n)?.map(({ title: section, cards }) => {
+          dashboardData(i18n)?.map(({ title, section, cards }) => {
             return (
-              <DashboardLayout title={i18n.t('{{section}}', { section: i18n.t(section) })} >
+              <DashboardLayout title={i18n.t('{{section}}', { section: i18n.t(title) })} >
                 {
                   cards.map(({ key: module, label, icon, configurable }) => (
                     <DashboardCard

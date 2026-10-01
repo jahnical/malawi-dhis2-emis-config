@@ -23,9 +23,11 @@ const staffCards = (i18n: D2I18n) => [
     { key: "final-result", label: i18n.t("Re-enroll"), icon: resultImage, path: "final-result", configurable: true },
 ];
 
+// `section` is the key in semis/values ("student", "staff") used for every lookup and save;
+// `title` is only the label shown, so it can be renamed (e.g. "Learner") without breaking anything
 const dashboardData = (i18n: D2I18n) => [
-    { key: 0, title: "Learner", cards: studentCards(i18n) },
-    { key: 1, title: "Staff", cards: staffCards(i18n) }
+    { key: 0, section: "student", title: "Learner", cards: studentCards(i18n) },
+    { key: 1, section: "staff", title: "Staff", cards: staffCards(i18n) }
 ]
 
 export { staffCards, studentCards, dashboardData }
