@@ -15,6 +15,7 @@ import { SchoolCalendarState } from "../../atoms/schoolCalendar";
 import useShowAlerts from "../../hooks/alert/useShowAlert";
 import SubjectMappingTable, { DataElementOption } from "../performance/SubjectMappingTable";
 import GradeRangeTable from "../performance/GradeRangeTable";
+import { rangeProblems } from "../../utils/performance/validateRanges";
 import TermRemarksTable from "../performance/TermRemarksTable";
 import StandardGroupsTable from "../performance/StandardGroupsTable";
 import { useGetDataElementOptionSet } from "../../hooks/dataElements/useGetDataElementOptionSet";
@@ -103,6 +104,17 @@ function ModalManager(props: ModalManagerInterface) {
         if (!formVariables?.flatMap((x: any) => x.fields).flat()?.every((field: any) =>
             (!field?.required) || (field?.required && e[field.name])
         )) return
+
+        if (isPerformance) {
+            const problems = [
+                ...rangeProblems(gradeRanges as any[], "minScore", "maxScore", i18n.t("Grade range")),
+                ...rangeProblems(termRemarksRanges as any[], "minPercentage", "maxPercentage", i18n.t("Term remark range")),
+            ]
+            if (problems.length > 0) {
+                show({ message: `${i18n.t("Fix the ranges before saving")}: ${problems.join("; ")}`, type: { critical: true } })
+                return
+            }
+        }
 
         try {
             setLoading(true)

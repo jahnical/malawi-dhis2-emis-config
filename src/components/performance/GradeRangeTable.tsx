@@ -88,6 +88,7 @@ function GradeRangeTable({ gradeOptionSetId, value, onChange }: GradeRangeTableP
                                                 onChange={e => updateRow(index, 'optionCode', e.target.value)}
                                                 displayEmpty
                                                 disabled={loading}
+                                                error={!row.optionCode}
                                             >
                                                 <MenuItem value=""><em>— Select grade —</em></MenuItem>
                                                 {availableOptions.map(opt => (
